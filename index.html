@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html lang="ar">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>دفتر التطبيق</title>
+
+  <!-- ربط ملف CSS الخارجي -->
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- ربط أيقونات Font Awesome -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- الشريط الجانبي الثابت -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <nav class="menu">
+
+      <ul>
+
+        <li data-page="page-calculation"><i class="fas fa-calculator"></i><span>الحساب</span></li>
+
+        <li data-page="page-sales"><i class="fas fa-shopping-cart"></i><span>المبيعات</span></li>
+
+        <li data-page="page-expenses"><i class="fas fa-money-bill-wave"></i><span>المصروفات</span></li>
+
+        <li data-page="page-netSales"><i class="fas fa-chart-line"></i><span>صافي المبيعات</span></li>
+
+        <li data-page="page-items"><i class="fas fa-boxes"></i><span>الأصناف</span></li>
+
+      </ul>
+
+    </nav>
+
+  </aside>
+
+  
+
+  <!-- المحتوى الرئيسي -->
+
+  <main class="content">
+
+    <!-- صفحة الحساب -->
+
+    <section id="page-calculation" class="page active">
+
+      <div class="page-header header-calculation">
+
+        <h2>الحساب</h2>
+
+      </div>
+
+      <div class="page-body">
+
+        <form id="calculationForm">
+
+          <div class="form-group">
+
+            <label for="calc-date">التاريخ:</label>
+
+            <input type="date" id="calc-date" name="date" required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="calc-item">اسم الصنف:</label>
+
+            <select id="calc-item" name="item" required>
+
+              <option value="">اختر الصنف</option>
+
+              <!-- سيتم تعبئة القائمة ديناميكيًا من بيانات الأصناف -->
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="calc-quantity">الكمية:</label>
+
+            <input type="number" id="calc-quantity" name="quantity" min="1" required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="calc-price">السعر:</label>
+
+            <input type="number" id="calc-price" name="price" min="0" step="0.01" required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="calc-total">الإجمالي:</label>
+
+            <input type="number" id="calc-total" name="total" readonly>
+
+          </div>
+
+          <button type="submit" class="btn">حفظ العملية</button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+    
+
+    <!-- صفحة المبيعات -->
+
+    <section id="page-sales" class="page">
+
+      <div class="page-header header-sales">
+
+        <h2>المبيعات</h2>
+
+      </div>
+
+      <div class="page-body">
+
+        <div class="totals">
+
+          <div>إجمالي المبيعات اليومية: <span id="dailySalesTotal">0</span></div>
+
+          <div>إجمالي المبيعات الشهرية: <span id="monthlySalesTotal">0</span></div>
+
+        </div>
+
+        <table id="salesTable">
+
+          <thead>
+
+            <tr>
+
+              <th>التاريخ</th>
+
+              <th>اسم الصنف</th>
+
+              <th>الكمية</th>
+
+              <th>السعر</th>
+
+              <th>الإجمالي</th>
+
+              <th>الإجراءات</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <!-- بيانات المبيعات ستعبأ ديناميكيًا -->
+
+          </tbody>
+
+        </table>
+
+        <!-- منطقة الشهور السابقة للمبيعات -->
+
+        <h3>الشهور السابقة</h3>
+
+        <div id="previousMonthsSales" class="previous-months"></div>
+
+        <div id="salesMonthDetails" class="month-details" style="display:none;">
+
+          <h4>تفاصيل المبيعات لشهر: <span id="salesMonthLabel"></span></h4>
+
+          <table id="salesMonthTable">
+
+            <thead>
+
+              <tr>
+
+                <th>التاريخ</th>
+
+                <th>اسم الصنف</th>
+
+                <th>الكمية</th>
+
+                <th>السعر</th>
+
+                <th>الإجمالي</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <!-- تفاصيل المبيعات للشهر -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    
+
+    <!-- صفحة المصروفات -->
+
+    <section id="page-expenses" class="page">
+
+      <div class="page-header header-expenses">
+
+        <h2>المصروفات</h2>
+
+      </div>
+
+      <div class="page-body">
+
+        <div class="totals">
+
+          <div>إجمالي المصروفات اليومية: <span id="dailyExpensesTotal">0</span></div>
+
+          <div>إجمالي المصروفات الشهرية: <span id="monthlyExpensesTotal">0</span></div>
+
+        </div>
+
+        <button id="addExpenseBtn" class="btn">إضافة مصروف</button>
+
+        <div id="expenseFormContainer" class="form-container" style="display:none;">
+
+          <form id="expenseForm">
+
+            <div class="form-group">
+
+              <label for="expense-date">التاريخ:</label>
+
+              <input type="date" id="expense-date" name="date" readonly>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="expense-amount">المبلغ:</label>
+
+              <input type="number" id="expense-amount" name="amount" min="0" step="0.01" required>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="expense-reason">سبب المصروف:</label>
+
+              <input type="text" id="expense-reason" name="reason" required>
+
+            </div>
+
+            <button type="submit" class="btn">حفظ المصروف</button>
+
+          </form>
+
+        </div>
+
+        <table id="expensesTable">
+
+          <thead>
+
+            <tr>
+
+              <th>التاريخ</th>
+
+              <th>المبلغ</th>
+
+              <th>سبب المصروف</th>
+
+              <th>الإجراءات</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <!-- بيانات المصروفات ستعبأ ديناميكيًا -->
+
+          </tbody>
+
+        </table>
+
+        <!-- منطقة الشهور السابقة للمصروفات -->
+
+        <h3>الشهور السابقة</h3>
+
+        <div id="previousMonthsExpenses" class="previous-months"></div>
+
+        <div id="expensesMonthDetails" class="month-details" style="display:none;">
+
+          <h4>تفاصيل المصروفات لشهر: <span id="expensesMonthLabel"></span></h4>
+
+          <table id="expensesMonthTable">
+
+            <thead>
+
+              <tr>
+
+                <th>التاريخ</th>
+
+                <th>المبلغ</th>
+
+                <th>سبب المصروف</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <!-- تفاصيل المصروفات للشهر -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    
+
+    <!-- صفحة صافي المبيعات -->
+
+    <section id="page-netSales" class="page">
+
+      <div class="page-header header-netSales">
+
+        <h2>صافي المبيعات</h2>
+
+      </div>
+
+      <div class="page-body">
+
+        <div class="totals">
+
+          <div>صافي المبيعات اليومية: <span id="dailyNetSales">0</span></div>
+
+          <div>صافي المبيعات الشهرية: <span id="monthlyNetSales">0</span></div>
+
+        </div>
+
+        <table id="netSalesTable">
+
+          <thead>
+
+            <tr>
+
+              <th>التاريخ</th>
+
+              <th>المبيعات</th>
+
+              <th>المصروفات</th>
+
+              <th>صافي المبيعات</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <!-- بيانات صافي المبيعات ستعبأ ديناميكيًا -->
+
+          </tbody>
+
+        </table>
+
+        <!-- منطقة الشهور السابقة لصافي المبيعات -->
+
+        <h3>الشهور السابقة</h3>
+
+        <div id="previousMonthsNetSales" class="previous-months"></div>
+
+        <div id="netSalesMonthDetails" class="month-details" style="display:none;">
+
+          <h4>تفاصيل صافي المبيعات لشهر: <span id="netSalesMonthLabel"></span></h4>
+
+          <table id="netSalesMonthTable">
+
+            <thead>
+
+              <tr>
+
+                <th>الشهر</th>
+
+                <th>المبيعات</th>
+
+                <th>المصروفات</th>
+
+                <th>صافي المبيعات</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <!-- تفاصيل صافي المبيعات للشهر -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    
+
+    <!-- صفحة الأصناف -->
+
+    <section id="page-items" class="page">
+
+      <div class="page-header header-items">
+
+        <h2>الأصناف</h2>
+
+      </div>
+
+      <div class="page-body">
+
+        <button id="addItemBtn" class="btn">إضافة صنف</button>
+
+        <div id="itemFormContainer" class="form-container" style="display:none;">
+
+          <form id="itemForm">
+
+            <div class="form-group">
+
+              <label for="item-name">اسم الصنف:</label>
+
+              <input type="text" id="item-name" name="name" required>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="item-quantity">الكمية المشتراة:</label>
+
+              <input type="number" id="item-quantity" name="quantity" min="1" required>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="item-price">سعر الشراء:</label>
+
+              <input type="number" id="item-price" name="price" min="0" step="0.01" required>
+
+            </div>
+
+            <button type="submit" class="btn">حفظ الصنف</button>
+
+          </form>
+
+        </div>
+
+        <table id="itemsTable">
+
+          <thead>
+
+            <tr>
+
+              <th>اسم الصنف</th>
+
+              <th>الكمية المشتراة</th>
+
+              <th>سعر الشراء</th>
+
+              <th>الكمية المباعَة</th>
+
+              <th>الكمية المتبقية</th>
+
+              <th>الإجراءات</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <!-- بيانات الأصناف ستعبأ ديناميكيًا -->
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    
+
+  </main>
+
+  
+
+  <!-- ربط ملف JavaScript الخارجي -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
+
